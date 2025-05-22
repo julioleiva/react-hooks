@@ -1,7 +1,7 @@
-import { FormWithRef } from "./components/FormWithRef";
+import { WithUseCallback } from "./components/WithUseCallback";
 
 function App(): JSX.Element {
-  return <FormWithRef />;
+  return <WithUseCallback />;
 }
 
 export default App;
