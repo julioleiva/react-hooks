@@ -1,8 +1,7 @@
-import { Counter } from "./components/Counter";
-// import { FocusInput } from "./components/FocusInput";
+import { FormWithRef } from "./components/FormWithRef";
 
 function App(): JSX.Element {
-  return <Counter />;
+  return <FormWithRef />;
 }
 
 export default App;
