@@ -1,4 +1,5 @@
 import { useReducer } from "react";
+import styles from "./FormComponent.module.css";
 
 // Definición de tipos para un formulario
 interface FormState {
@@ -156,25 +157,20 @@ export default function FormComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Crear cuenta
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+    <div className={styles.container}>
+      <div className={styles.formWrapper}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Crear cuenta</h2>
+          <p className={styles.subtitle}>
             Completa todos los campos para registrarte
           </p>
         </div>
 
-        <div className="mt-8 space-y-6">
-          <div className="space-y-4">
+        <div className={styles.formSection}>
+          <div className={styles.fieldsContainer}>
             {/* Username Field */}
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
+            <div className={styles.fieldGroup}>
+              <label htmlFor="username" className={styles.label}>
                 Nombre de usuario
               </label>
               <input
@@ -183,25 +179,20 @@ export default function FormComponent() {
                 type="text"
                 value={state.username}
                 onChange={(e) => handleFieldChange("username", e.target.value)}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  state.errors.username ? "border-red-300" : "border-gray-300"
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`${styles.input} ${
+                  state.errors.username ? styles.inputError : ""
+                }`}
                 placeholder="Ingresa tu nombre de usuario"
                 disabled={state.isSubmitting}
               />
               {state.errors.username && (
-                <p className="mt-1 text-sm text-red-600">
-                  {state.errors.username}
-                </p>
+                <p className={styles.errorMessage}>{state.errors.username}</p>
               )}
             </div>
 
             {/* Email Field */}
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+            <div className={styles.fieldGroup}>
+              <label htmlFor="email" className={styles.label}>
                 Email
               </label>
               <input
@@ -210,25 +201,20 @@ export default function FormComponent() {
                 type="email"
                 value={state.email}
                 onChange={(e) => handleFieldChange("email", e.target.value)}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  state.errors.email ? "border-red-300" : "border-gray-300"
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`${styles.input} ${
+                  state.errors.email ? styles.inputError : ""
+                }`}
                 placeholder="Ingresa tu email"
                 disabled={state.isSubmitting}
               />
               {state.errors.email && (
-                <p className="mt-1 text-sm text-red-600">
-                  {state.errors.email}
-                </p>
+                <p className={styles.errorMessage}>{state.errors.email}</p>
               )}
             </div>
 
             {/* Password Field */}
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+            <div className={styles.fieldGroup}>
+              <label htmlFor="password" className={styles.label}>
                 Contraseña
               </label>
               <input
@@ -237,42 +223,37 @@ export default function FormComponent() {
                 type="password"
                 value={state.password}
                 onChange={(e) => handleFieldChange("password", e.target.value)}
-                className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                  state.errors.password ? "border-red-300" : "border-gray-300"
-                } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                className={`${styles.input} ${
+                  state.errors.password ? styles.inputError : ""
+                }`}
                 placeholder="Ingresa tu contraseña"
                 disabled={state.isSubmitting}
               />
               {state.errors.password && (
-                <p className="mt-1 text-sm text-red-600">
-                  {state.errors.password}
-                </p>
+                <p className={styles.errorMessage}>{state.errors.password}</p>
               )}
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div>
+          <div className={styles.buttonContainer}>
             <button
               type="button"
               onClick={handleSubmit}
               disabled={state.isSubmitting}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                state.isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              } transition duration-150 ease-in-out`}
+              className={`${styles.submitButton} ${
+                state.isSubmitting ? styles.submitButtonDisabled : ""
+              }`}
             >
               {state.isSubmitting ? (
-                <div className="flex items-center">
+                <div className={styles.loadingContainer}>
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    className={styles.loadingSpinner}
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                   >
                     <circle
-                      className="opacity-25"
+                      className={styles.spinnerCircle}
                       cx="12"
                       cy="12"
                       r="10"
@@ -280,7 +261,7 @@ export default function FormComponent() {
                       strokeWidth="4"
                     ></circle>
                     <path
-                      className="opacity-75"
+                      className={styles.spinnerPath}
                       fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
@@ -293,13 +274,12 @@ export default function FormComponent() {
             </button>
           </div>
 
-          {/* Form State Debug Info (opcional, para desarrollo) */}
-          <div className="mt-4 p-3 bg-gray-100 rounded-md text-xs">
+          <div className={styles.debugSection}>
             <details>
-              <summary className="cursor-pointer text-gray-600">
+              <summary className={styles.debugSummary}>
                 Ver estado del formulario
               </summary>
-              <pre className="mt-2 text-gray-800">
+              <pre className={styles.debugContent}>
                 {JSON.stringify(state, null, 2)}
               </pre>
             </details>

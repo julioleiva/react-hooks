@@ -1,7 +1,7 @@
-import { CounterWithUseReducer } from "./components/CounterWithUseReducer";
+import FormComponent from "./components/StrongTypedReducer";
 
 function App(): JSX.Element {
-  return <CounterWithUseReducer />;
+  return <FormComponent />;
 }
 
 export default App;
