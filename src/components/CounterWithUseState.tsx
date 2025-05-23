@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function CounterWithState(): JSX.Element {
+export function CounterWithUseState(): JSX.Element {
   const [count, setCount] = useState<number>(0);
   const [step, setStep] = useState<number>(1);
 

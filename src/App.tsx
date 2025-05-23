@@ -1,7 +1,7 @@
-import { WithUseCallback } from "./components/WithUseCallback";
+import { CounterWithUseReducer } from "./components/CounterWithUseReducer";
 
 function App(): JSX.Element {
-  return <WithUseCallback />;
+  return <CounterWithUseReducer />;
 }
 
 export default App;

@@ -26,7 +26,7 @@ function counterReducer(
   }
 }
 
-export function CounterWithReducer(): JSX.Element {
+export function CounterWithUseReducer(): JSX.Element {
   const [state, dispatch] = useReducer(counterReducer, { count: 0, step: 1 });
 
   return (
