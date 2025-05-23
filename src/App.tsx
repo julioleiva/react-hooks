@@ -1,7 +1,5 @@
-import { FormWithRef } from "./components/FormWithRef";
-
 function App(): JSX.Element {
-  return <FormWithRef />;
+  return <h1>Hooks de React explicados con mucho amor</h1>;
 }
 
 export default App;
