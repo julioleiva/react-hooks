@@ -18,13 +18,75 @@
   border-left: 4px solid #6f42c1;
 }
 
+.headerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .pageText {
   color: #555;
   line-height: 1.6;
-  margin-bottom: 1.5rem;
+  margin: 0;
 }
 
-.userList {
+.homeButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.homeButton:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+.userGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.userCard {
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.userCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #6f42c1;
+}
+
+.userName {
+  color: #333;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.userRole {
+  color: #6c757d;
+  margin: 0 0 1.5rem 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.cardActions {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -33,17 +95,34 @@
 .userLink {
   display: block;
   padding: 0.75rem 1rem;
-  background-color: white;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
   text-decoration: none;
-  color: #495057;
+  border-radius: 6px;
+  text-align: center;
   transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .userLink:hover {
-  background-color: #e9ecef;
-  border-color: #adb5bd;
+  background-color: #0056b3;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.userButton {
+  padding: 0.75rem 1rem;
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.userButton:hover {
+  background-color: #5a32a3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(111, 66, 193, 0.3);
 }

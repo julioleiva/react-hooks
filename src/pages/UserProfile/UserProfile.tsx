@@ -1,9 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./UserProfile.module.css";
 
-export function UserProfile() {
+function UserProfile() {
   const { userId } = useParams();
+  const navigate = useNavigate();
 
+  // Datos de ejemplo para diferentes usuarios
   const users = {
     "1": {
       name: "Ana García",
@@ -24,6 +26,18 @@ export function UserProfile() {
 
   const user = userId ? users[userId] : undefined;
 
+  const handleGoBack = () => {
+    navigate("/users");
+  };
+
+  const handleGoHome = () => {
+    navigate("/");
+  };
+
+  const handleNavigateToUser = (newUserId) => {
+    navigate(`/users/${newUserId}`);
+  };
+
   if (!user) {
     return (
       <main className={styles.main}>
@@ -32,10 +46,23 @@ export function UserProfile() {
           <p className={styles.pageText}>
             El usuario con ID "{userId}" no existe en nuestro sistema.
           </p>
+          <div className={styles.buttonGroup}>
+            <button onClick={handleGoBack} className={styles.button}>
+              ← Volver a Usuarios
+            </button>
+            <button onClick={handleGoHome} className={styles.buttonSecondary}>
+              🏠 Ir al Inicio
+            </button>
+          </div>
         </div>
       </main>
     );
   }
+
+  // Obtener otros usuarios para navegación rápida
+  const otherUsers = Object.entries(users)
+    .filter(([id]) => id !== userId)
+    .map(([id, userData]) => ({ id, name: userData.name }));
 
   return (
     <main className={styles.main}>
@@ -55,7 +82,37 @@ export function UserProfile() {
             <strong>Email:</strong> {user.email}
           </p>
         </div>
+
+        <div className={styles.navigation}>
+          <div className={styles.buttonGroup}>
+            <button onClick={handleGoBack} className={styles.button}>
+              ← Volver a Usuarios
+            </button>
+            <button onClick={handleGoHome} className={styles.buttonSecondary}>
+              🏠 Inicio
+            </button>
+          </div>
+
+          {otherUsers.length > 0 && (
+            <div className={styles.quickNavigation}>
+              <h3 className={styles.quickNavTitle}>Ver otros usuarios:</h3>
+              <div className={styles.userButtons}>
+                {otherUsers.map(({ id, name }) => (
+                  <button
+                    key={id}
+                    onClick={() => handleNavigateToUser(id)}
+                    className={styles.userButton}
+                  >
+                    {name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
 }
+
+export default UserProfile;
