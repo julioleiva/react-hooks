@@ -27,7 +27,8 @@ function UserProfile() {
   const user =
     userId && userId in users ? users[userId as keyof typeof users] : undefined;
 
-  // Explicación de este tipado tan WTF:
+  // Explicación de este tipado tan WTF 🤯:
+
   // userId - Primero verifica que userId tenga un valor "truthy" (no sea null, undefined, "", 0, etc.)
   // && - Operador AND lógico
   // userId in users - Si userId existe, verifica si existe como propiedad en el objeto users
