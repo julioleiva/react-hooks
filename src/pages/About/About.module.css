@@ -1,0 +1,29 @@
+.main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.pageContent {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.pageText {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.pageText:last-child {
+  margin-bottom: 0;
+}

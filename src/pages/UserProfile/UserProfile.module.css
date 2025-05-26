@@ -1,0 +1,43 @@
+.main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.pageContent {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #fd7e14;
+}
+
+.profileInfo {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.pageText {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.pageText:last-child {
+  margin-bottom: 0;
+}
+
+.pageText strong {
+  color: #333;
+  font-weight: 600;
+  min-width: 80px;
+  display: inline-block;
+}
