@@ -35,6 +35,10 @@ export function Navigation() {
             Usuarios
           </NavLink>
         </li>
+        <li className={styles.navItem}>
+          <NavLink to="/products">🛍️ Productos</NavLink>{" "}
+          {/* Con icono para destacar */}
+        </li>
       </ul>
     </nav>
   );

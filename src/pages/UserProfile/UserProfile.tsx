@@ -24,7 +24,8 @@ function UserProfile() {
     },
   };
 
-  const user = userId ? users[userId] : undefined;
+  const user =
+    userId && userId in users ? users[userId as keyof typeof users] : undefined;
 
   const handleGoBack = () => {
     navigate("/users");
@@ -34,7 +35,7 @@ function UserProfile() {
     navigate("/");
   };
 
-  const handleNavigateToUser = (newUserId) => {
+  const handleNavigateToUser = (newUserId: string) => {
     navigate(`/users/${newUserId}`);
   };
 

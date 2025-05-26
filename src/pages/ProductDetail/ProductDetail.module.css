@@ -1,0 +1,49 @@
+.main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.breadcrumbLink {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.breadcrumbLink:hover {
+  color: #0056b3;
+}
+
+.breadcrumbSeparator {
+  color: #6c757d;
+}
+
+.breadcrumbCurrent {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.navigationInfo {
+  background-color: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.navigationInfo p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
