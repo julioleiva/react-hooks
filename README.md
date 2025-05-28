@@ -33,6 +33,71 @@ function LocationInfo() {
 }
 ```
 
+### State en location
+
+El `state` en React Router es un objeto que permite pasar datos entre rutas de manera que no aparecen en la URL. Te explico cómo funciona:
+
+## ¿Qué es `location.state`?
+
+Es una propiedad del objeto `location` que contiene datos adicionales que se pueden enviar cuando navegas a una nueva ruta. Estos datos:
+
+- **No aparecen en la URL** (a diferencia de los parámetros de consulta)
+- **Se mantienen en la sesión del navegador**
+- **Son útiles para pasar información sensible o compleja**
+
+## ¿Cómo se envía el state?
+
+```javascript
+import { useNavigate } from "react-router-dom";
+
+function MiComponente() {
+  const navigate = useNavigate();
+
+  const irAOtraRuta = () => {
+    navigate("/destino", {
+      state: {
+        message: "Hola desde la ruta anterior",
+        userId: 123,
+        datos: { nombre: "Juan", edad: 30 },
+      },
+    });
+  };
+
+  return <button onClick={irAOtraRuta}>Ir a destino</button>;
+}
+```
+
+**O con el componente `Link`:**
+
+```javascript
+<Link to="/destino" state={{ message: "Datos desde Link", id: 456 }}>
+  Ir a destino
+</Link>
+```
+
+**En nuestro código**
+
+```javascript
+const state = location.state || {};
+```
+
+Esta línea toma el `state` que llegó con la navegación, y si no hay ninguno (es `null` o `undefined`), usa un objeto vacío `{}` como fallback.
+
+Luego verificas si existe una propiedad específica:
+
+```javascript
+{
+  state.message && <p>Mensaje: {state.message}</p>;
+}
+```
+
+## Ventajas del state vs parámetros URL
+
+- **State**: Datos no visibles en URL, pueden ser objetos complejos
+- **URL params**: Visibles en URL, solo strings, se pueden compartir/bookmarear
+
+El `state` es perfecto para pasar datos temporales entre rutas sin ensuciar la URL.
+
 ### **2. ProductList Page**
 
 `src/pages/ProductList/ProductList.tsx`
