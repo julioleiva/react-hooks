@@ -1,4 +1,4 @@
-import useFetch from "../hook/useFetch";
+import { useFetch } from "../hook/useFetch";
 
 export function TodoList() {
   const { data, loading, error } = useFetch(
