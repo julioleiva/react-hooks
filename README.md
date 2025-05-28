@@ -297,3 +297,71 @@ const [searchParams, setSearchParams] = useSearchParams();
 - ✅ **Navegación en historial** (atrás/adelante)
 - ✅ **Manejo de errores** (rutas no encontradas)
 - ✅ **UX optimizada** con estilos y transiciones
+
+## 📦 Layouts y Rutas Anidadas con Outlet en React Router DOM
+
+Outlet es un componente especial que actúa como un marcador de posición donde se renderizan las rutas hijas (child routes) en layouts anidados.
+
+### ¿Cómo funciona?
+
+Cuando defines rutas anidadas, el componente padre necesita indicar dónde debe aparecer el contenido de las rutas hijas. Ahí es donde entra Outlet:
+
+```jsx
+import { Outlet } from "react-router-dom";
+
+function Layout() {
+  return (
+    <div>
+      <header>
+        <nav>Mi Navegación</nav>
+      </header>
+
+      <main>
+        <Outlet /> {/* Aquí se renderizarán las rutas hijas */}
+      </main>
+
+      <footer>Mi Footer</footer>
+    </div>
+  );
+}
+```
+
+### Configuración de rutas anidadas
+
+```jsx
+import { createBrowserRouter } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "contact",
+        element: <Contact />,
+      },
+    ],
+  },
+]);
+```
+
+En este ejemplo:
+
+Cuando el usuario visita /home, se renderiza <Layout> y dentro del <Outlet> aparece <Home>
+Cuando visita /about, se mantiene el layout pero el <Outlet> muestra <About>
+El header y footer permanecen constantes mientras cambia solo el contenido principal
+
+**Ventajas principales**
+Reutilización de layouts: Puedes mantener elementos comunes (navegación, sidebar, footer) mientras cambias solo el contenido específico de cada página.
+Anidación profunda: Puedes tener múltiples niveles de <Outlet> para estructuras más complejas.
+
+Rendimiento: Evita re-renderizar elementos que no cambian entre rutas.
+El <Outlet> es fundamental para crear aplicaciones con navegación fluida y layouts consistentes en React Router DOM.
