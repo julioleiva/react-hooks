@@ -1,1140 +1,800 @@
-# TanStack Router
+# Taller Completo: Tailwind CSS con Vite y React
 
-### Características Principales
+## 🎯 Objetivos del Taller
 
-- ✅ **100% Type-Safe** - Navegación, parámetros y datos completamente tipados
-- ✅ **Enrutamiento Basado en Archivos** - Estructura intuitiva y automática división de código
-- ✅ **Nested Routes & Layouts** - Rutas anidadas con layouts reutilizables
-- ✅ **Search Params como Estado** - Gestión de estado en la URL con validación
-- ✅ **Carga de Datos Integrada** - Loaders con caché SWR incorporado
-- ✅ **Suscripciones Granulares** - Re-renders optimizados con selectores
-- ✅ **Integración con React Query** - Perfecta integración con TanStack Query
-- ✅ **Suspense & Error Boundaries** - Soporte nativo para patrones React modernos
-- ✅ **SSR Ready** - Soporte completo para Server-Side Rendering
+Al finalizar, los participantes podrán:
 
-## Instalación
+- Configurar Tailwind CSS en un proyecto Vite + React
+- Dominar el sistema de utilidades de Tailwind
+- Crear interfaces responsive y modernas
+- Optimizar el bundle de producción
+- Implementar componentes reutilizables con Tailwind
 
-```bash
-npm install @tanstack/react-router
-# o
-yarn add @tanstack/react-router
-# o
-pnpm add @tanstack/react-router
-```
+---
 
-### Configuración Básica
+## 📚 Módulo 1: Introducción y Configuración
+
+### 1.1 ¿Qué es Tailwind CSS?
+
+- Diferencias entre CSS tradicional, frameworks como Bootstrap y Tailwind
+- Ventajas del utility-first approach
+- Casos de uso ideales
+
+### 1.2 Configuración del Entorno
 
 ```bash
-# Con el CLI
-npx create-tanstack-router@latest my-app
-cd my-app
+# Crear proyecto con Vite
+npm create vite@latest mi-proyecto-tailwind -- --template react
+cd mi-proyecto-tailwind
 npm install
-npm run dev
+
+# Instalar Tailwind CSS
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
 ```
 
-## Inicio Rápido
+### 1.3 Configuración de Tailwind
 
-### 1. Configuración del Router
-
-```typescript
-// src/router.tsx
-import { createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-
-export const router = createRouter({ routeTree });
-
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
+```javascript
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
 ```
 
-### 2. Ruta Root
-
-```typescript
-// src/routes/__root.tsx
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <div className="nav">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
-      </div>
-      <hr />
-      <Outlet />
-    </>
-  ),
-});
+```css
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 ```
 
-### 3. Rutas de Páginas
+### 1.4 Primer Ejemplo
 
-```typescript
-// src/routes/index.tsx
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/")({
-  component: () => <div>¡Hola desde la página principal!</div>,
-});
-```
-
-```typescript
-// src/routes/about.tsx
-import { createFileRoute } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/about")({
-  component: () => <div>Acerca de nosotros</div>,
-});
-```
-
-## Enrutamiento Type-Safe
-
-### Navegación Type-Safe
-
-TanStack Router vive y respira TypeScript. Todas las características fueron diseñadas con seguridad de tipos completamente inferida en mente.
-
-```typescript
-// ❌ Error de TypeScript si la ruta no existe
-<Link to="/ruta-inexistente">Ir a algún lugar</Link>
-
-// ✅ Navegación completamente tipada
-<Link to="/issues/$issueId" params={{ issueId: 'TSR-25' }}>
-  Ir a detalles
-</Link>
-```
-
-### useParams con StrictOrFrom
-
-```typescript
-// Con from específico - garantiza que issueId existe
-const { issueId } = useParams({ from: "/issues/$issueId" });
-//      ^? const issueId: string
-
-// Con strict: false - union de todos los params posibles
-const params = useParams({ strict: false });
-//    ^? const params: {
-//           issueId: string | undefined,
-//           dashboardId: number | undefined
-//       }
-```
-
-### Parámetros de Búsqueda Type-Safe
-
-```typescript
-// Definir schema de validación
-import { type } from "arktype";
-
-const issuesSchema = type({
-  page: "number > 0 = 1",
-  filter: 'string = ""',
-  sort: '"asc" | "desc" = "asc"',
-});
-
-export const Route = createFileRoute("/issues")({
-  validateSearch: issuesSchema,
-  component: Issues,
-});
-
-function Issues() {
-  const { page, filter, sort } = useSearch({ from: "/issues" });
-  //      ^? Completamente tipado según el schema
-
+```jsx
+// src/App.jsx
+function App() {
   return (
-    <div>
-      <p>Página: {page}</p>
-      <p>Filtro: {filter}</p>
-      <p>Ordenar: {sort}</p>
+    <div className="min-h-screen bg-blue-50 flex items-center justify-center">
+      <h1 className="text-4xl font-bold text-blue-600">¡Hola Tailwind!</h1>
     </div>
   );
 }
 ```
 
-## Route Context - Inyección de Dependencias
+---
 
-El contexto del router es una herramienta poderosa para inyección de dependencias y compartir datos entre rutas.
+## 🎨 Módulo 2: Sistema de Utilidades Básicas (90 min)
 
-### Configuración del Contexto Root
+### 2.1 Espaciado (Padding y Margin)
 
-```typescript
-// src/router.tsx
-import { createRootRouteWithContext } from "@tanstack/react-router";
-import { QueryClient } from "@tanstack/react-query";
+```jsx
+const EspaciadoEjemplos = () => (
+  <div className="p-8 space-y-4">
+    {/* Padding */}
+    <div className="p-4 bg-red-100">p-4</div>
+    <div className="px-6 py-2 bg-green-100">px-6 py-2</div>
 
-interface MyRouterContext {
-  queryClient: QueryClient;
-  auth: {
-    isAuthenticated: boolean;
-    user?: User;
-  };
-}
-
-const rootRoute = createRootRouteWithContext<MyRouterContext>()({
-  component: App,
-});
-
-const queryClient = new QueryClient();
-
-export const router = createRouter({
-  routeTree: rootRoute,
-  context: {
-    queryClient,
-    auth: {
-      isAuthenticated: false,
-    },
-  },
-});
+    {/* Margin */}
+    <div className="m-4 p-2 bg-blue-100">m-4</div>
+    <div className="mx-auto w-32 p-2 bg-yellow-100">mx-auto</div>
+  </div>
+);
 ```
 
-### Uso del Contexto en Rutas
+### 2.2 Colores y Backgrounds
 
-```typescript
-// src/routes/todos.tsx
-export const Route = createFileRoute("/todos")({
-  component: Todos,
-  loader: ({ context }) => {
-    // Acceso al contexto tipado
-    return context.queryClient.fetchQuery({
-      queryKey: ["todos", context.auth.user?.id],
-      queryFn: () => fetchTodos(context.auth.user?.id),
-    });
-  },
-});
+```jsx
+const ColoresEjemplos = () => (
+  <div className="grid grid-cols-3 gap-4 p-8">
+    <div className="bg-red-500 text-white p-4 rounded">Red 500</div>
+    <div className="bg-green-400 text-gray-800 p-4 rounded">Green 400</div>
+    <div className="bg-blue-600 text-white p-4 rounded">Blue 600</div>
 
-function Todos() {
-  const { queryClient, auth } = Route.useRouteContext();
-
-  return (
-    <div>
-      <h1>Todos para {auth.user?.name}</h1>
-      {/* Componente */}
+    {/* Gradientes */}
+    <div className="bg-gradient-to-r from-purple-400 to-pink-400 p-4 rounded text-white col-span-3">
+      Gradiente Purple to Pink
     </div>
-  );
-}
+  </div>
+);
 ```
 
-### Contexto Anidado y Breadcrumbs
+### 2.3 Tipografía
 
-```typescript
-// src/routes/app.tsx
-export const Route = createFileRoute("/app")({
-  beforeLoad: () => ({
-    getTitle: () => "Dashboard",
-    breadcrumb: "Dashboard",
-  }),
-  component: () => <Outlet />,
-});
-
-// src/routes/app/users/$userId.tsx
-export const Route = createFileRoute("/app/users/$userId")({
-  beforeLoad: ({ params }) => ({
-    getTitle: () => `Usuario ${params.userId}`,
-    breadcrumb: `Usuario ${params.userId}`,
-  }),
-  component: UserProfile,
-});
-
-// src/routes/__root.tsx
-export const Route = createRootRoute({
-  component: () => {
-    const matches = useRouterState({ select: (s) => s.matches });
-    const breadcrumbs = matches
-      .map((match) => match.context.breadcrumb)
-      .filter(Boolean);
-
-    return (
-      <div>
-        <nav>
-          {breadcrumbs.map((crumb, i) => (
-            <span key={i}>
-              {crumb} {i < breadcrumbs.length - 1 && ">"}
-            </span>
-          ))}
-        </nav>
-        <Outlet />
-      </div>
-    );
-  },
-});
+```jsx
+const TipografiaEjemplos = () => (
+  <div className="p-8 space-y-4">
+    <h1 className="text-4xl font-bold text-gray-900">Título Principal</h1>
+    <h2 className="text-2xl font-semibold text-gray-700">Subtítulo</h2>
+    <p className="text-base text-gray-600 leading-relaxed">
+      Este es un párrafo con interlineado relajado y color gris.
+    </p>
+    <p className="text-sm font-medium text-blue-600 uppercase tracking-wide">
+      Texto pequeño y espaciado
+    </p>
+  </div>
+);
 ```
 
-## Rutas Anidadas y Layouts
+### 2.4 Flexbox y Grid
 
-### Estructura de Archivos
-
-```
-src/routes/
-├── __root.tsx
-├── index.tsx
-├── about.tsx
-├── app/
-│   ├── route.tsx          # Layout route
-│   ├── dashboard.tsx      # /app/dashboard
-│   ├── settings.tsx       # /app/settings
-│   └── users/
-│       ├── route.tsx      # Layout para usuarios
-│       ├── index.tsx      # /app/users
-│       └── $userId/
-│           ├── route.tsx  # Layout para usuario específico
-│           ├── index.tsx  # /app/users/$userId
-│           └── edit.tsx   # /app/users/$userId/edit
-```
-
-### Layout Routes
-
-```typescript
-// src/routes/app/route.tsx
-export const Route = createFileRoute("/app")({
-  component: AppLayout,
-});
-
-function AppLayout() {
-  return (
-    <div className="app-layout">
-      <header>
-        <nav>
-          <Link to="/app/dashboard">Dashboard</Link>
-          <Link to="/app/settings">Configuración</Link>
-        </nav>
-      </header>
-      <main>
-        <Outlet /> {/* Renderiza rutas hijas */}
-      </main>
+```jsx
+const LayoutEjemplos = () => (
+  <div className="p-8 space-y-8">
+    {/* Flexbox */}
+    <div className="flex justify-between items-center bg-gray-100 p-4 rounded">
+      <div className="bg-red-300 p-2 rounded">Item 1</div>
+      <div className="bg-green-300 p-2 rounded">Item 2</div>
+      <div className="bg-blue-300 p-2 rounded">Item 3</div>
     </div>
-  );
-}
-```
 
-### Pathless Layout Routes
-
-```typescript
-// src/routes/_authenticated.tsx
-export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
-  },
-  component: () => <Outlet />,
-});
-
-// Todas las rutas bajo _authenticated/ requieren autenticación
-// src/routes/_authenticated/dashboard.tsx
-// src/routes/_authenticated/profile.tsx
-```
-
-### Rutas No-Anidadas
-
-```typescript
-// Ruta anidada normal: /posts/$postId
-// src/routes/posts/$postId.tsx
-
-// Ruta no-anidada: /posts/$postId/edit (no hereda layout de posts)
-// src/routes/posts_.$postId.edit.tsx
-export const Route = createFileRoute("/posts_/$postId/edit")({
-  component: PostEditor,
-});
-```
-
-## Integración con TanStack Query
-
-### Configuración del Router con Query Client
-
-```typescript
-// src/router.tsx
-import { QueryClient } from "@tanstack/react-query";
-import { createRootRouteWithContext } from "@tanstack/react-router";
-
-interface MyRouterContext {
-  queryClient: QueryClient;
-}
-
-const queryClient = new QueryClient();
-
-const rootRoute = createRootRouteWithContext<MyRouterContext>()({
-  component: RootComponent,
-});
-
-export const router = createRouter({
-  routeTree: rootRoute,
-  context: { queryClient },
-});
-```
-
-### Carga de Datos con Loaders
-
-```typescript
-// src/routes/posts/$postId.tsx
-import { useSuspenseQuery } from "@tanstack/react-query";
-
-const postQueryOptions = (postId: string) => ({
-  queryKey: ["posts", postId],
-  queryFn: () => fetchPost(postId),
-});
-
-export const Route = createFileRoute("/posts/$postId")({
-  loader: ({ context: { queryClient }, params: { postId } }) => {
-    // Prefetch de datos en el servidor
-    return queryClient.ensureQueryData(postQueryOptions(postId));
-  },
-  component: PostDetail,
-});
-
-function PostDetail() {
-  const { postId } = Route.useParams();
-  const { data: post } = useSuspenseQuery(postQueryOptions(postId));
-  //      ^? const post: Post (garantizado por Suspense)
-
-  return (
-    <article>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-    </article>
-  );
-}
-```
-
-### Gestión de Estado con Search Params
-
-```typescript
-// src/routes/posts/index.tsx
-import { useQuery } from "@tanstack/react-query";
-
-const postsSearchSchema = type({
-  page: "number = 1",
-  limit: "number = 10",
-  search: 'string = ""',
-  category: "string?",
-});
-
-export const Route = createFileRoute("/posts")({
-  validateSearch: postsSearchSchema,
-  component: PostsList,
-});
-
-function PostsList() {
-  const { page, limit, search, category } = useSearch({ from: "/posts" });
-  const navigate = useNavigate({ from: "/posts" });
-
-  const { data: posts, isLoading } = useQuery({
-    queryKey: ["posts", { page, limit, search, category }],
-    queryFn: () => fetchPosts({ page, limit, search, category }),
-  });
-
-  const handleSearchChange = (newSearch: string) => {
-    navigate({
-      search: (prev) => ({ ...prev, search: newSearch, page: 1 }),
-    });
-  };
-
-  return (
-    <div>
-      <input
-        value={search}
-        onChange={(e) => handleSearchChange(e.target.value)}
-        placeholder="Buscar posts..."
-      />
-      {isLoading ? (
-        <div>Cargando...</div>
-      ) : (
-        <div>
-          {posts?.map((post) => (
-            <div key={post.id}>
-              <Link to="/posts/$postId" params={{ postId: post.id }}>
-                {post.title}
-              </Link>
-            </div>
-          ))}
+    {/* Grid */}
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[1, 2, 3, 4].map((n) => (
+        <div key={n} className="bg-purple-200 p-4 rounded text-center">
+          Grid {n}
         </div>
-      )}
+      ))}
     </div>
-  );
-}
+  </div>
+);
 ```
 
-## Search Middleware
+---
 
-TanStack Router permite definir middleware para procesar parámetros de búsqueda antes y después de la validación.
+## 📱 Módulo 3: Responsive Design
 
-### Middleware de Validación Personalizada
+### 3.1 Breakpoints de Tailwind
 
-```typescript
-// src/middleware/searchMiddleware.ts
-import { createSearchMiddleware } from "@tanstack/react-router";
+```jsx
+const ResponsiveEjemplo = () => (
+  <div className="p-4">
+    <div
+      className="
+      bg-red-400 
+      sm:bg-green-400 
+      md:bg-blue-400 
+      lg:bg-yellow-400 
+      xl:bg-purple-400 
+      p-8 rounded text-white font-bold text-center
+    "
+    >
+      Cambia de color según el tamaño de pantalla
+    </div>
 
-export const paginationMiddleware = createSearchMiddleware({
-  beforeValidate: (search) => {
-    // Normalizar parámetros antes de validación
-    return {
-      ...search,
-      page: search.page ? Number(search.page) : 1,
-      limit: search.limit ? Number(search.limit) : 10,
-    };
-  },
-  afterValidate: (search) => {
-    // Procesar después de validación
-    return {
-      ...search,
-      offset: (search.page - 1) * search.limit,
-    };
-  },
-});
+    <div
+      className="
+      text-sm 
+      sm:text-base 
+      md:text-lg 
+      lg:text-xl 
+      xl:text-2xl 
+      mt-4 text-center
+    "
+    >
+      Texto responsive
+    </div>
+  </div>
+);
 ```
 
-### Uso del Middleware
+### 3.2 Grid Responsive
 
-```typescript
-// src/routes/products.tsx
-export const Route = createFileRoute("/products")({
-  validateSearch: productsSchema,
-  searchMiddleware: [paginationMiddleware],
-  component: Products,
-});
+```jsx
+const GridResponsive = () => (
+  <div
+    className="
+    grid 
+    grid-cols-1 
+    sm:grid-cols-2 
+    lg:grid-cols-3 
+    xl:grid-cols-4 
+    gap-4 
+    p-8
+  "
+  >
+    {Array.from({ length: 8 }, (_, i) => (
+      <div key={i} className="bg-indigo-100 p-6 rounded-lg text-center">
+        Card {i + 1}
+      </div>
+    ))}
+  </div>
+);
 ```
 
-## Suscripciones Granulares
+### 3.3 Navbar Responsive
 
-Evita re-renders innecesarios con selectores granulares:
+```jsx
+import { useState } from "react";
 
-```typescript
-function ProductTable() {
-  // Solo se re-renderiza cuando cambia 'page'
-  const page = useSearch({
-    from: "/products",
-    select: (search) => search.page,
-  });
+const NavbarResponsive = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Solo se re-renderiza cuando cambia 'sortBy'
-  const sortBy = useSearch({
-    from: "/products",
-    select: (search) => search.sortBy,
-  });
-
-  // Componente pesado que solo depende de 'page'
   return (
-    <ExpensiveTable
-      page={page}
-      sortBy={sortBy}
-      onSortChange={(sort) => {
-        navigate({
-          search: (prev) => ({ ...prev, sortBy: sort }),
-        });
-      }}
+    <nav className="bg-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center py-4">
+          {/* Logo */}
+          <div className="text-xl font-bold text-gray-800">MiApp</div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex space-x-8">
+            <a href="#" className="text-gray-600 hover:text-gray-900">
+              Inicio
+            </a>
+            <a href="#" className="text-gray-600 hover:text-gray-900">
+              Servicios
+            </a>
+            <a href="#" className="text-gray-600 hover:text-gray-900">
+              Contacto
+            </a>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="md:hidden pb-4">
+            <a
+              href="#"
+              className="block py-2 text-gray-600 hover:text-gray-900"
+            >
+              Inicio
+            </a>
+            <a
+              href="#"
+              className="block py-2 text-gray-600 hover:text-gray-900"
+            >
+              Servicios
+            </a>
+            <a
+              href="#"
+              className="block py-2 text-gray-600 hover:text-gray-900"
+            >
+              Contacto
+            </a>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
+```
+
+---
+
+## 🎭 Módulo 4: Estados y Interacciones
+
+### 4.1 Hover, Focus y Active
+
+```jsx
+const InteraccionesEjemplo = () => (
+  <div className="p-8 space-y-4">
+    <button
+      className="
+      bg-blue-500 hover:bg-blue-600 
+      text-white px-6 py-2 rounded
+      transition-colors duration-200
+      focus:outline-none focus:ring-2 focus:ring-blue-300
+      active:bg-blue-700
+    "
+    >
+      Botón Interactivo
+    </button>
+
+    <div
+      className="
+      p-4 border border-gray-200 rounded
+      hover:shadow-lg hover:border-gray-300
+      transition-all duration-300
+      cursor-pointer
+    "
+    >
+      Card con Hover
+    </div>
+  </div>
+);
+```
+
+### 4.2 Transiciones y Animaciones
+
+```jsx
+const AnimacionesEjemplo = () => (
+  <div className="p-8 space-y-8">
+    {/* Transición simple */}
+    <div
+      className="
+      w-32 h-32 bg-red-400 rounded
+      transition-all duration-500 ease-in-out
+      hover:bg-blue-400 hover:scale-110 hover:rotate-45
+    "
     />
-  );
-}
+
+    {/* Animación de pulso */}
+    <div
+      className="
+      w-16 h-16 bg-green-400 rounded-full
+      animate-pulse
+    "
+    />
+
+    {/* Animación de rebote */}
+    <div
+      className="
+      w-16 h-16 bg-purple-400 rounded
+      animate-bounce
+    "
+    />
+  </div>
+);
 ```
 
-## Configuración en Monorepo
+---
 
-### Estructura del Proyecto
+## 🔧 Módulo 5: Componentes Avanzados (120 min)
 
+### 5.1 Formularios Estilizados
+
+```jsx
+const FormularioCompleto = () => (
+  <form className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-lg">
+    <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+      Registro
+    </h2>
+
+    <div className="mb-4">
+      <label className="block text-gray-700 text-sm font-bold mb-2">
+        Nombre completo
+      </label>
+      <input
+        type="text"
+        className="
+          w-full px-3 py-2 border border-gray-300 rounded-md
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+          placeholder-gray-400
+        "
+        placeholder="Tu nombre completo"
+      />
+    </div>
+
+    <div className="mb-4">
+      <label className="block text-gray-700 text-sm font-bold mb-2">
+        Email
+      </label>
+      <input
+        type="email"
+        className="
+          w-full px-3 py-2 border border-gray-300 rounded-md
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+          placeholder-gray-400
+        "
+        placeholder="tu@email.com"
+      />
+    </div>
+
+    <div className="mb-6">
+      <label className="block text-gray-700 text-sm font-bold mb-2">
+        Contraseña
+      </label>
+      <input
+        type="password"
+        className="
+          w-full px-3 py-2 border border-gray-300 rounded-md
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+          placeholder-gray-400
+        "
+        placeholder="********"
+      />
+    </div>
+
+    <button
+      className="
+      w-full bg-blue-500 hover:bg-blue-600 
+      text-white font-bold py-2 px-4 rounded-md
+      transition-colors duration-200
+      focus:outline-none focus:ring-2 focus:ring-blue-300
+    "
+    >
+      Registrarse
+    </button>
+  </form>
+);
 ```
-packages/
-├── shared-router/
-│   ├── package.json
-│   ├── src/
-│   │   ├── index.ts
-│   │   └── routes/
-│   └── tsconfig.json
-├── app-admin/
-│   ├── package.json
-│   ├── src/
-│   │   ├── main.tsx
-│   │   └── routes/
-│   └── vite.config.ts
-└── app-client/
-    ├── package.json
-    ├── src/
-    │   ├── main.tsx
-    │   └── routes/
-    └── vite.config.ts
-```
 
-### Configuración Compartida
+### 5.2 Cards con Diferentes Layouts
 
-```typescript
-// packages/shared-router/src/index.ts
-export * from "@tanstack/react-router";
-export type { RouterContext } from "./types";
-
-// Tipos compartidos
-export interface BaseRouterContext {
-  queryClient: QueryClient;
-  auth: AuthContext;
-}
-```
-
-```typescript
-// packages/app-admin/src/router.ts
-import { createRouter } from "@tanstack/react-router";
-import { BaseRouterContext } from "shared-router";
-import { routeTree } from "./routeTree.gen";
-
-interface AdminRouterContext extends BaseRouterContext {
-  adminPermissions: string[];
-}
-
-export const router = createRouter({
-  routeTree,
-  context: {
-    queryClient: new QueryClient(),
-    auth: useAuth(),
-    adminPermissions: ["admin", "moderator"],
-  } as AdminRouterContext,
-});
-```
-
-### Configuración de Vite para Monorepo
-
-```typescript
-// packages/app-admin/vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
-
-export default defineConfig({
-  plugins: [
-    react(),
-    TanStackRouterVite({
-      routesDirectory: "./src/routes",
-      generatedRouteTree: "./src/routeTree.gen.ts",
-    }),
-  ],
-  resolve: {
-    alias: {
-      "shared-router": "../shared-router/src",
+```jsx
+const CardGallery = () => {
+  const productos = [
+    {
+      id: 1,
+      nombre: "Producto 1",
+      precio: "$99",
+      imagen: "https://via.placeholder.com/300x200",
     },
-  },
-});
-```
-
-## TanStack Start - SSR Full-Stack
-
-TanStack Start es un framework full-stack construido sobre TanStack Router que añade capacidades de servidor.
-
-### Instalación
-
-```bash
-npx create-tanstack-start@latest my-app
-cd my-app
-npm install
-npm run dev
-```
-
-### Estructura del Proyecto
-
-```
-app/
-├── routes/
-│   ├── __root.tsx
-│   ├── index.tsx
-│   └── api/
-│       └── hello.ts
-├── client.tsx
-├── router.tsx
-├── ssr.tsx           # Configuración SSR
-└── routeTree.gen.ts
-```
-
-### Configuración SSR
-
-```typescript
-// app/ssr.tsx
-import {
-  createStartHandler,
-  defaultStreamHandler,
-} from "@tanstack/react-start/server";
-import { getRouterManifest } from "@tanstack/react-start/router-manifest";
-import { createRouter } from "./router";
-
-export default createStartHandler({
-  createRouter,
-  getRouterManifest,
-})(defaultStreamHandler);
-```
-
-### Server Functions
-
-```typescript
-// app/routes/api/hello.ts
-import { createAPIFileRoute } from "@tanstack/react-start/api";
-
-export const Route = createAPIFileRoute("/api/hello")({
-  GET: ({ request }) => {
-    return new Response("Hello from the server!", {
-      status: 200,
-    });
-  },
-});
-```
-
-### Funciones del Servidor
-
-```typescript
-// app/routes/posts.tsx
-import { createServerFn } from "@tanstack/react-start";
-import { createFileRoute } from "@tanstack/react-router";
-
-const getPosts = createServerFn("GET", async () => {
-  // Código que solo se ejecuta en el servidor
-  const posts = await db.posts.findMany();
-  return posts;
-});
-
-export const Route = createFileRoute("/posts")({
-  loader: () => getPosts(),
-  component: Posts,
-});
-
-function Posts() {
-  const posts = Route.useLoaderData();
+    {
+      id: 2,
+      nombre: "Producto 2",
+      precio: "$149",
+      imagen: "https://via.placeholder.com/300x200",
+    },
+    {
+      id: 3,
+      nombre: "Producto 3",
+      precio: "$199",
+      imagen: "https://via.placeholder.com/300x200",
+    },
+  ];
 
   return (
-    <div>
-      {posts.map((post) => (
-        <article key={post.id}>
-          <h2>{post.title}</h2>
-          <p>{post.excerpt}</p>
-        </article>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8">
+      {productos.map((producto) => (
+        <div
+          key={producto.id}
+          className="
+          bg-white rounded-lg shadow-md overflow-hidden
+          hover:shadow-xl transition-shadow duration-300
+        "
+        >
+          <img
+            src={producto.imagen}
+            alt={producto.nombre}
+            className="w-full h-48 object-cover"
+          />
+          <div className="p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+              {producto.nombre}
+            </h3>
+            <p className="text-2xl font-bold text-green-600 mb-4">
+              {producto.precio}
+            </p>
+            <button
+              className="
+              w-full bg-indigo-500 hover:bg-indigo-600 
+              text-white py-2 px-4 rounded-md
+              transition-colors duration-200
+            "
+            >
+              Agregar al carrito
+            </button>
+          </div>
+        </div>
       ))}
     </div>
   );
-}
+};
 ```
 
-### Middleware en Start
+### 5.3 Modal Component
 
-```typescript
-// app/middleware.ts
-import { createMiddleware } from "@tanstack/react-start";
+```jsx
+import { useState } from "react";
 
-export const authMiddleware = createMiddleware().server(
-  async ({ request, next }) => {
-    const token = request.headers.get("Authorization");
+const ModalEjemplo = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    if (!token) {
-      throw new Error("No autorizado");
-    }
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg"
+      >
+        Abrir Modal
+      </button>
 
-    const user = await validateToken(token);
-
-    return next({
-      context: { user },
-    });
-  }
-);
-
-// Uso en server function
-const getProtectedData = createServerFn("GET", async () => {
-  // ...
-}).middleware([authMiddleware]);
+      {isOpen && (
+        <div
+          className="
+          fixed inset-0 bg-black bg-opacity-50 
+          flex items-center justify-center z-50
+        "
+        >
+          <div
+            className="
+            bg-white rounded-lg p-8 max-w-md mx-4
+            transform transition-all duration-300
+          "
+          >
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Modal de Ejemplo
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Este es el contenido del modal. Aquí puedes poner cualquier
+              información.
+            </p>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 ```
 
-### Configuración de Deployment
+---
 
-```typescript
-// app.config.ts
-import { defineConfig } from "@tanstack/react-start/config";
+## ⚙️ Módulo 6: Personalización y Configuración Avanzada (75 min)
 
-export default defineConfig({
-  server: {
-    preset: "vercel", // o 'netlify', 'cloudflare-pages', etc.
-  },
-  vite: {
-    plugins: [
-      // plugins de Vite
-    ],
-  },
-});
-```
+### 6.1 Extendiendo el Tema
 
-## Rutas Autenticadas
-
-### Protección con beforeLoad
-
-```typescript
-// src/routes/_authenticated.tsx
-import { createFileRoute, redirect } from "@tanstack/react-router";
-
-export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.isAuthenticated) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
+```javascript
+// tailwind.config.js
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          50: "#eff6ff",
+          500: "#3b82f6",
+          900: "#1e3a8a",
         },
-      });
-    }
-  },
-  component: () => <Outlet />,
-});
-```
-
-### Configuración de Autenticación
-
-```typescript
-// src/auth.tsx
-import { createContext, useContext } from "react";
-
-interface AuthContext {
-  isAuthenticated: boolean;
-  user?: User;
-  login: (credentials: Credentials) => Promise<void>;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContext | null>(null);
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<User>();
-
-  const login = async (credentials: Credentials) => {
-    const user = await apiLogin(credentials);
-    setUser(user);
-    setIsAuthenticated(true);
-  };
-
-  const logout = () => {
-    setUser(undefined);
-    setIsAuthenticated(false);
-  };
-
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth debe usarse dentro de AuthProvider");
-  }
-  return context;
-};
-```
-
-### Integración con el Router
-
-```typescript
-// src/main.tsx
-import { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "@tanstack/react-router";
-import { AuthProvider, useAuth } from "./auth";
-import { router } from "./router";
-
-function InnerApp() {
-  const auth = useAuth();
-  return <RouterProvider router={router} context={{ auth }} />;
-}
-
-function App() {
-  return (
-    <AuthProvider>
-      <InnerApp />
-    </AuthProvider>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
-```
-
-## Configuración de Bundlers
-
-### Vite
-
-```typescript
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
-
-export default defineConfig({
-  plugins: [
-    react(),
-    TanStackRouterVite({
-      routesDirectory: "./src/routes",
-      generatedRouteTree: "./src/routeTree.gen.ts",
-    }),
-  ],
-});
-```
-
-### Webpack
-
-```typescript
-// webpack.config.js
-const { TanStackRouterWebpack } = require("@tanstack/router-webpack-plugin");
-
-module.exports = {
-  plugins: [
-    new TanStackRouterWebpack({
-      routesDirectory: "./src/routes",
-      generatedRouteTree: "./src/routeTree.gen.ts",
-    }),
-  ],
-};
-```
-
-### Next.js
-
-```typescript
-// next.config.js
-const { TanStackRouterNext } = require("@tanstack/router-next-plugin");
-
-module.exports = TanStackRouterNext({
-  routesDirectory: "./src/routes",
-  generatedRouteTree: "./src/routeTree.gen.ts",
-});
-```
-
-## Ejemplos Avanzados
-
-### Rutas Dinámicas con Validación
-
-```typescript
-// src/routes/users/$userId.tsx
-import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
-
-const userParamsSchema = z.object({
-  userId: z.string().uuid(),
-});
-
-export const Route = createFileRoute("/users/$userId")({
-  parseParams: (params) => userParamsSchema.parse(params),
-  beforeLoad: ({ params }) => {
-    // params.userId es ahora un UUID validado
-    console.log("Loading user:", params.userId);
-  },
-  component: UserProfile,
-});
-```
-
-### Manejo de Errores
-
-```typescript
-// src/routes/posts/$postId.tsx
-export const Route = createFileRoute("/posts/$postId")({
-  loader: ({ params }) => fetchPost(params.postId),
-  errorComponent: ({ error }) => (
-    <div className="error">
-      <h2>Error al cargar el post</h2>
-      <p>{error.message}</p>
-      <button onClick={() => window.location.reload()}>Reintentar</button>
-    </div>
-  ),
-  component: PostDetail,
-});
-```
-
-### Rutas con Data Loaders Condicionales
-
-```typescript
-// src/routes/dashboard.tsx
-export const Route = createFileRoute("/dashboard")({
-  loader: ({ context }) => {
-    if (context.auth.user?.role === "admin") {
-      return Promise.all([
-        fetchUserStats(),
-        fetchAdminMetrics(),
-        fetchSystemHealth(),
-      ]).then(([stats, metrics, health]) => ({
-        stats,
-        metrics,
-        health,
-      }));
-    }
-
-    return fetchUserStats().then((stats) => ({ stats }));
-  },
-  component: Dashboard,
-});
-```
-
-## Migración desde React Router
-
-### Comparación de APIs
-
-```typescript
-// React Router v6
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    children: [
-      {
-        path: "dashboard",
-        element: <Dashboard />,
+        "custom-gray": "#f8fafc",
       },
-    ],
+      fontFamily: {
+        sans: ["Inter", "ui-sans-serif", "system-ui"],
+        heading: ["Poppins", "ui-sans-serif", "system-ui"],
+      },
+      spacing: {
+        72: "18rem",
+        84: "21rem",
+        96: "24rem",
+      },
+      animation: {
+        "fade-in": "fadeIn 0.5s ease-in-out",
+        "slide-up": "slideUp 0.3s ease-out",
+      },
+    },
   },
-]);
-
-// TanStack Router (equivalente)
-const rootRoute = createRootRoute({
-  component: Root,
-});
-
-const dashboardRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/dashboard",
-  component: Dashboard,
-});
-
-const router = createRouter({
-  routeTree: rootRoute.addChildren([dashboardRoute]),
-});
+  plugins: [],
+};
 ```
 
-### Guía de Migración
+### 6.2 Creando Componentes Reutilizables
 
-1. **Instalar TanStack Router**: `npm install @tanstack/react-router`
-2. **Configurar el plugin**: Agregar el plugin de Vite/Webpack
-3. **Convertir rutas**: Migrar de `createBrowserRouter` a file-based routing
-4. **Actualizar navegación**: Cambiar `useNavigate` por la versión tipada
-5. **Migrar loaders**: Convertir `loaders` de React Router a TanStack Router
-6. **Actualizar tests**: Adaptar tests para las nuevas APIs
+```jsx
+// components/Button.jsx
+const Button = ({
+  children,
+  variant = "primary",
+  size = "md",
+  onClick,
+  disabled = false,
+  ...props
+}) => {
+  const baseClasses =
+    "font-semibold rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2";
 
-## Mejores Prácticas
+  const variants = {
+    primary: "bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-300",
+    secondary:
+      "bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-300",
+    danger: "bg-red-500 hover:bg-red-600 text-white focus:ring-red-300",
+  };
 
-### 1. Estructura de Carpetas
+  const sizes = {
+    sm: "px-3 py-1.5 text-sm",
+    md: "px-4 py-2 text-base",
+    lg: "px-6 py-3 text-lg",
+  };
 
-```
-src/
-├── routes/
-│   ├── __root.tsx
-│   ├── index.tsx
-│   ├── _authenticated/
-│   │   ├── dashboard.tsx
-│   │   └── profile.tsx
-│   └── _public/
-│       ├── login.tsx
-│       └── register.tsx
-├── components/
-├── hooks/
-├── services/
-└── types/
-```
+  const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "";
 
-### 2. Validación de Schemas
+  const classes = `${baseClasses} ${variants[variant]} ${sizes[size]} ${disabledClasses}`;
 
-```typescript
-// Usar librerías como Zod o ArkType para validación
-import { z } from "zod";
+  return (
+    <button
+      className={classes}
+      onClick={onClick}
+      disabled={disabled}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
 
-const searchSchema = z.object({
-  page: z.number().min(1).default(1),
-  limit: z.number().min(1).max(100).default(10),
-  search: z.string().optional(),
-});
+// Uso del componente
+const ButtonShowcase = () => (
+  <div className="p-8 space-y-4">
+    <div className="space-x-4">
+      <Button variant="primary">Primario</Button>
+      <Button variant="secondary">Secundario</Button>
+      <Button variant="danger">Peligro</Button>
+    </div>
 
-export const Route = createFileRoute("/products")({
-  validateSearch: searchSchema,
-});
-```
+    <div className="space-x-4">
+      <Button size="sm">Pequeño</Button>
+      <Button size="md">Mediano</Button>
+      <Button size="lg">Grande</Button>
+    </div>
 
-### 3. Gestión de Errores
-
-```typescript
-// Componente de error reutilizable
-const ErrorFallback = ({
-  error,
-  retry,
-}: {
-  error: Error;
-  retry: () => void;
-}) => (
-  <div className="error-boundary">
-    <h2>Algo salió mal</h2>
-    <details>
-      <summary>Detalles del error</summary>
-      <pre>{error.message}</pre>
-    </details>
-    <button onClick={retry}>Reintentar</button>
+    <Button disabled>Deshabilitado</Button>
   </div>
 );
-
-// Usar en rutas
-export const Route = createFileRoute("/data")({
-  errorComponent: ErrorFallback,
-});
 ```
 
-### 4. Optimización de Performance
+### 6.3 Directivas @apply y Componentes CSS
 
-```typescript
-// Preload de rutas críticas
-const router = createRouter({
-  routeTree,
-  defaultPreload: "intent", // Preload al hacer hover
-  defaultPreloadStaleTime: 1000 * 60 * 2, // 2 minutos
-});
+```css
+/* src/components.css */
+@layer components {
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200;
+  }
 
-// Lazy loading de componentes pesados
-const HeavyComponent = lazy(() => import("./HeavyComponent"));
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300;
+  }
 
-export const Route = createFileRoute("/heavy")({
-  component: () => (
-    <Suspense fallback={<div>Cargando...</div>}>
-      <HeavyComponent />
-    </Suspense>
-  ),
-});
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  }
+}
 ```
 
-### 5. Testing
+---
 
-```typescript
-// Test helpers
-import { createMemoryHistory } from "@tanstack/react-router";
-import { render } from "@testing-library/react";
+## 🚀 Módulo 7: Optimización y Producción (45 min)
 
-const createTestRouter = (initialEntries = ["/"]) => {
-  return createRouter({
-    routeTree,
-    history: createMemoryHistory({ initialEntries }),
-  });
+### 7.1 Purging CSS No Utilizado
+
+```javascript
+// tailwind.config.js - Configuración de purge
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    // Incluir archivos adicionales si es necesario
+    "./src/components/**/*.{js,jsx}",
+  ],
+  // ... resto de la configuración
 };
-
-// Test de rutas
-test("renders dashboard correctly", () => {
-  const router = createTestRouter(["/dashboard"]);
-
-  render(<RouterProvider router={router} />);
-
-  expect(screen.getByText("Dashboard")).toBeInTheDocument();
-});
 ```
 
-## Comparación con Otros Routers
+### 7.2 Análisis del Bundle
 
-| Característica     | TanStack Router  | React Router | Next.js Router |
-| ------------------ | ---------------- | ------------ | -------------- |
-| Type Safety        | ✅ 100%          | ❌ Básico    | ✅ Parcial     |
-| File-based Routing | ✅               | ❌           | ✅             |
-| Search Params      | ✅ Primera clase | ❌ Manual    | ❌ Manual      |
-| Nested Layouts     | ✅               | ✅           | ✅             |
-| Data Loading       | ✅ Con caché     | ✅ Básico    | ✅ Avanzado    |
-| Bundle Size        | 📦 ~12kb         | 📦 ~13kb     | 📦 Framework   |
-| Learning Curve     | 📈 Media         | 📈 Baja      | 📈 Media-Alta  |
+```bash
+# Construir para producción
+npm run build
+
+# Analizar el tamaño del bundle
+npm install -D vite-bundle-analyzer
+```
+
+### 7.3 Mejores Prácticas
+
+- Usar clases condicionales eficientemente
+- Evitar duplicación de estilos
+- Organizar componentes por responsabilidades
+- Utilizar variables CSS para valores dinámicos
+
+---
+
+## 🎯 Proyecto Final: Dashboard Completo (90 min)
+
+### Características a Implementar:
+
+1. **Header responsive** con navegación
+2. **Sidebar** colapsable
+3. **Grid de cards** con estadísticas
+4. **Tabla** con datos dinámicos
+5. **Formularios** de filtrado
+6. **Modal** para acciones
+7. **Componentes** reutilizables
+8. **Responsive design** completo
+
+```jsx
+// Estructura base del Dashboard
+const Dashboard = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        {/* Header content */}
+      </header>
+
+      <div className="flex">
+        {/* Sidebar */}
+        <aside
+          className={`
+          bg-white shadow-sm w-64 min-h-screen
+          transform transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0 lg:static lg:inset-0
+        `}
+        >
+          {/* Sidebar content */}
+        </aside>
+
+        {/* Main content */}
+        <main className="flex-1 p-8">{/* Dashboard content */}</main>
+      </div>
+    </div>
+  );
+};
+```
+
+---
+
+## 📝 Recursos Adicionales
+
+### Herramientas Útiles:
+
+- **Tailwind CSS IntelliSense** (VS Code Extension)
+- **Headless UI** - Componentes accesibles
+- **Heroicons** - Iconos optimizados
+- **Tailwind UI** - Componentes premium
+
+### Documentación:
+
+- [Tailwind CSS Docs](https://tailwindcss.com/docs)
+- [Vite Docs](https://vitejs.dev/)
+- [React Docs](https://react.dev/)
+
+### Práctica Adicional:
+
+- Recrear diseños de Dribbble/Behance
+- Contribuir a proyectos open source
+- Construir landing pages responsivas
+- Crear sistemas de diseño
+
+---
+
+## ✅ Evaluación Final
+
+### Criterios de Evaluación:
+
+1. **Configuración correcta** de Tailwind con Vite
+2. **Uso apropiado** de utilidades de Tailwind
+3. **Responsive design** funcional
+4. **Componentes reutilizables** bien estructurados
+5. **Código limpio** y organizadas
+6. **Optimización** para producción
+
+### Proyecto a Entregar:
+
+Dashboard completo con todas las características mencionadas, código fuente organizado y documentación básica de instalación y uso.
+
+---
+
+## 🎉 Conclusión
+
+Al completar este taller, habrás dominado:
+
+- Configuración e integración de Tailwind CSS
+- Sistema completo de utilidades
+- Responsive design moderno
+- Componentes React con Tailwind
+- Optimización y mejores prácticas
+- Desarrollo de interfaces profesionales
