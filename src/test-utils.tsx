@@ -1,5 +1,3 @@
-// src/test-utils.tsx
-// Utilidades personalizadas para testing
 import React from "react";
 import type { ReactElement } from "react";
 import { render } from "@testing-library/react";

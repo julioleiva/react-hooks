@@ -38,8 +38,17 @@ export const Modal = ({
       // Guardar referencia al elemento actualmente enfocado
       previouslyFocused.current = document.activeElement as HTMLElement;
 
-      // Prevenir scroll del body
+      // Prevenir scroll del body y ocultar contenido de fondo
       document.body.style.overflow = "hidden";
+
+      // Ocultar contenido de fondo para lectores de pantalla
+      const mainContent = document.querySelector(
+        "main, #root, [data-reactroot]"
+      );
+      if (mainContent && !mainContent.hasAttribute("aria-hidden")) {
+        mainContent.setAttribute("aria-hidden", "true");
+        mainContent.setAttribute("data-modal-hidden", "true");
+      }
 
       // Anunciar apertura del modal
       setAnnouncement(
@@ -47,7 +56,7 @@ export const Modal = ({
       );
 
       // Enfocar elemento inicial
-      setTimeout(() => {
+      const focusTimer = setTimeout(() => {
         if (initialFocus === "content" && contentRef.current) {
           // Buscar primer elemento enfocable en contenido
           const firstFocusable = contentRef.current.querySelector<HTMLElement>(
@@ -102,8 +111,18 @@ export const Modal = ({
 
       // Cleanup
       return () => {
+        clearTimeout(focusTimer);
         document.removeEventListener("keydown", handleKeyDown);
         document.body.style.overflow = "";
+
+        // Restaurar visibilidad del contenido de fondo
+        const hiddenContent = document.querySelector(
+          '[data-modal-hidden="true"]'
+        );
+        if (hiddenContent) {
+          hiddenContent.removeAttribute("aria-hidden");
+          hiddenContent.removeAttribute("data-modal-hidden");
+        }
       };
     }
   }, [isOpen, onClose, preventClose, title, description, initialFocus]);
@@ -114,10 +133,14 @@ export const Modal = ({
       // Limpiar anuncio
       setAnnouncement("");
 
-      // Restaurar foco
-      if (previouslyFocused.current) {
-        previouslyFocused.current.focus();
-      }
+      // Restaurar foco con un pequeño delay para evitar problemas de timing
+      const restoreTimer = setTimeout(() => {
+        if (previouslyFocused.current) {
+          previouslyFocused.current.focus();
+        }
+      }, 100);
+
+      return () => clearTimeout(restoreTimer);
     }
   }, [isOpen]);
 
@@ -157,13 +180,12 @@ export const Modal = ({
         {announcement}
       </div>
 
-      {/* Overlay del modal */}
+      {/* Overlay del modal - SIN aria-hidden */}
       <div
         ref={overlayRef}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-75 backdrop-blur-sm"
         onClick={handleOverlayClick}
         role="presentation"
-        aria-hidden="true"
       >
         {/* Contenedor del modal */}
         <div

@@ -47,7 +47,7 @@ global.cancelIdleCallback = vi.fn().mockImplementation((id) => {
   clearTimeout(id);
 });
 
-// COMENTADO: Configuración de axe-core para desarrollo (causaba el error)
+// Configuración de axe-core para desarrollo
 // Solo habilitar en desarrollo real del navegador, no en tests
 /*
 if (import.meta.env.DEV && typeof window !== 'undefined') {

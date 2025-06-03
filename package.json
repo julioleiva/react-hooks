@@ -14,9 +14,10 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
     "test:a11y": "vitest run -t \"(accessibility|a11y)\"",
+    "test:unit": "vitest run -t \"(unit|unit-test)\"",
+    "test:int": "vitest run -t \"(int|integration)\"",
     "test:a11y-file": "vitest run AccessibleForm.a11y.test.tsx",
     "test:reporter": "vitest --reporter=verbose",
-    "test:related": "vitest related",
     "test:changed": "vitest changed",
     "test:typecheck": "vitest typecheck"
   },
